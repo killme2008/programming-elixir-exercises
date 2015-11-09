@@ -34,6 +34,10 @@ defmodule RingTicker do
   def generator(clients) do
     receive do
       {:register, client} ->
+        #send the seed
+        if length(clients) ==0 do
+          send client, {:tick, self}
+        end
         generator([client | clients])
       {:next_tick, client} ->
         clients

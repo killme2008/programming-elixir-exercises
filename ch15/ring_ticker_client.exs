@@ -8,10 +8,15 @@ defmodule RingTickerClient do
     receive do
       {:tick, _} ->
         IO.puts "Got tick! #{inspect(self)}"
-        got_tick()
-    after RingTicker.tick_timeout ->
-        RingTicker.send_next_tick(self)
+        me = self
+        spawn fn ->
+          receive do
+          after RingTicker.tick_timeout ->
+              RingTicker.send_next_tick(me)
+          end
+        end
         got_tick()
     end
+
   end
 end
