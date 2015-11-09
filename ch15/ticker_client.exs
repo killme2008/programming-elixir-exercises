@@ -1,5 +1,5 @@
 defmodule TickerClient do
-	def run do
+  def run do
     pid = spawn_link(__MODULE__, :got_tick, [])
     Ticker.register(pid)
   end
