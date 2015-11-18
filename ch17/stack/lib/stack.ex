@@ -7,7 +7,8 @@ defmodule Stack do
     import Supervisor.Spec, warn: false
 
     children = [
-      worker(Stack.Server, [[1,2,3]]),
+      supervisor(Stack.SubSupervisor, [[1,2,3]]),
+      worker(Stack.Server, [])
     ]
 
     # See http://elixir-lang.org/docs/stable/elixir/Supervisor.html
@@ -15,4 +16,5 @@ defmodule Stack do
     opts = [strategy: :one_for_one, name: Stack.Supervisor]
     Supervisor.start_link(children, opts)
   end
+
 end

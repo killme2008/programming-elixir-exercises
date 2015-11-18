@@ -2,8 +2,8 @@ defmodule Stack.Server do
   use GenServer
 
   # Client API
-  def start_link(default) do
-    GenServer.start_link(__MODULE__, default, name: __MODULE__)
+  def start_link() do
+    GenServer.start_link(__MODULE__, :ok, name: __MODULE__)
   end
 
   def pop do
@@ -19,12 +19,12 @@ defmodule Stack.Server do
   end
 
   def terminate(reason, state) do
-    IO.puts "stack is about to terminate because of '#{inspect(reason)}', and current state is '#{inspect(state)}'"
+    Stack.Stash.set_value(state)
   end
 
   # Server callbacks
-  def init(state) do
-    {:ok, state}
+  def init(:ok) do
+    {:ok, Stack.Stash.get_value()}
   end
 
   def handle_call(:pop, _from, [e | tail]) do
